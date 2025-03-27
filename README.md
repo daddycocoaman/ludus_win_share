@@ -1,40 +1,18 @@
-# README
+# Ansible Role: ludus_win_share ([Ludus](https://ludus.cloud))
 
-This template includes a task yml for caching downloads to the Ludus host (download_file.yml) as well as GitHub action to push the role to Ansible Galaxy when a tag is created in git. You'll need to get a [Galaxy token](https://galaxy.ansible.com/ui/token/) and set it as `GALAXY_API_KEY` in [Github Secrets](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) for the Ansible Galaxy deployment to work correctly.
-
-Remove this section, and replace all `{{ variable }}` strings. Write your tasks in `./tasks/main.yml`
-
-# Ansible Role: {{ Thing }} ([Ludus](https://ludus.cloud))
-
-An Ansible Role that installs [{{ Something }}](https://example.com) on {{ type of host }} and optionally configures [{{ Another Thing }}](https://example).
-
-> [!WARNING]
-> This is a warning about something in this role
+An Ansible Role that creates SMB shares on Windows hosts for Ludus. This Ludus-focused role is based on [ansible.windows.win_share](https://docs.ansible.com/ansible/latest/collections/ansible/windows/win_share_module.html).
 
 ## Requirements
 
-None.
+- Windows 8/Windows Server 2012+
 
 ## Role Variables
 
-Available variables are listed below, along with default values (see `defaults/main.yml`):
-
-    # This is a comment explaining the variable below
-    ludus_thing_variable1: true
+This role follows the same variables as  [ansible.windows.win_share](https://docs.ansible.com/ansible/latest/collections/ansible/windows/win_share_module.html)
 
 ## Dependencies
 
-None.
-
-## Example Playbook
-
-```yaml
-- hosts: {{ thing }}_hosts
-  roles:
-    - {{ your github username }}.{{ this repo name }}
-  vars:
-    {{ role vars here }}
-```
+- ansible.windows
 
 ## Example Ludus Range Config
 
@@ -53,9 +31,23 @@ ludus:
       fqdn: ludus.domain
       role: primary-dc
     roles:
-      - {{ your github username }}.{{ this repo name }}
+      - daddycocoaman.ludus_win_share
     role_vars:
-      {{ example role var usage }}
+      win_shares:
+        - name: internal
+          description: top secret share
+          path: C:\shares\internal
+          list: false
+          full: Administrators,CEO
+          read: HR-Global
+          deny: HR-External
+        - name: company
+          description: top secret share
+          path: C:\shares\company
+          list: true
+          full: Administrators,CEO
+          read: Global
+
 ```
 
 ## License
@@ -65,4 +57,4 @@ GPLv3
 
 ## Author Information
 
-This role was created by [{{Your Github Username}}](https://github.com/{{ your github username }}), for [Ludus](https://ludus.cloud/).
+This role was created by [daddycocoaman](https://github.com/daddycocoaman), for [Ludus](https://ludus.cloud/).
